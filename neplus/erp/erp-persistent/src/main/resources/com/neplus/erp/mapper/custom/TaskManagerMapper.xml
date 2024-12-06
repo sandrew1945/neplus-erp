@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neplus.erp.mapper.custom.TaskManagerMapper" >
+	<resultMap id="BaseResultMap" type="com.neplus.erp.model.TmTaskPO">
+		<id column="task_id" jdbcType="INTEGER" property="taskId" />
+		<result column="client_id" jdbcType="INTEGER" property="clientId" />
+		<result column="task_type" jdbcType="INTEGER" property="taskType" />
+		<result column="task_status" jdbcType="INTEGER" property="taskStatus" />
+		<result column="doc_file" jdbcType="INTEGER" property="docFile" />
+		<result column="doc_archive_date" jdbcType="TIMESTAMP" property="docArchiveDate" />
+		<result column="bank_notes_file" jdbcType="INTEGER" property="bankNotesFile" />
+		<result column="bank_notes_archive_date" jdbcType="TIMESTAMP" property="bankNotesArchiveDate" />
+		<result column="self_exam_file" jdbcType="INTEGER" property="selfExamFile" />
+		<result column="self_exam_archive_date" jdbcType="TIMESTAMP" property="selfExamArchiveDate" />
+		<result column="draft_file" jdbcType="INTEGER" property="draftFile" />
+		<result column="draft_create_date" jdbcType="TIMESTAMP" property="draftCreateDate" />
+		<result column="dir_rej_date" jdbcType="TIMESTAMP" property="dirRejDate" />
+		<result column="dir_rej_cmnt" jdbcType="VARCHAR" property="dirRejCmnt" />
+		<result column="cli_rej_date" jdbcType="TIMESTAMP" property="cliRejDate" />
+		<result column="cli_rej_cmnt" jdbcType="VARCHAR" property="cliRejCmnt" />
+		<result column="is_fetch_doc" jdbcType="INTEGER" property="isFetchDoc" />
+		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+	</resultMap>
+	
+	
+    <!--  分页查询List -->
+    <select id="taskManagerPageQuery" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="pager">
+		SELECT t.task_id, t.client_id, c.client_name, c.client_type, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status, DATE_FORMAT(t.create_date, '%d-%m-%Y') AS create_date,
+		t.doc_archive_date, t.bank_notes_archive_date, t.self_exam_archive_date, t.draft_create_date
+		FROM tm_task t
+		LEFT JOIN tm_client c ON t.client_id = c.client_id
+		LEFT JOIN tm_user ou ON c.opt_id = ou.user_id
+		LEFT JOIN tm_user au ON c.approve_id = au.user_id
+		WHERE 1 = 1
+		AND t.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		<if test="condition.clientName != '' and condition.clientName != null">
+		AND c.client_name LIKE CONCAT('%',#{condition.clientName},'%')
+		</if>
+		<if test="condition.clientType != '' and condition.clientType != null">
+		AND c.client_type = #{condition.clientType}
+		</if>
+		<if test="condition.taskType != '' and condition.taskType != null">
+		AND t.task_type = #{condition.taskType}
+		</if>
+		<if test="condition.taskStatus != '' and condition.taskStatus != null">
+		AND t.task_status = #{condition.taskStatus}
+		</if>
+		<if test="condition.startFrom != '' and condition.startFrom != null">
+		AND t.create_date &gt;= str_to_date(#{condition.startFrom}, '%d-%m-%Y %H:%i:%s')
+		</if>
+		<if test="condition.endWith != '' and condition.endWith != null">
+		AND t.create_date &lt;= str_to_date(#{condition.endWith}, '%d-%m-%Y %H:%i:%s')
+		</if>
+		<if test="condition.optId != '' and condition.optId != null">
+		AND c.opt_id = #{condition.optId}
+		</if>
+		ORDER BY task_id
+	</select>
+
+    <select id="getTaskInfoById" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="integer">
+		SELECT t.task_id, t.client_id, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,DATE_FORMAT(t.create_date, '%d-%m-%Y') AS create_date,
+			   t.doc_archive_date, t.doc_file, df.file_path AS doc_file_path,
+			   t.bank_notes_archive_date, t.bank_notes_file, bf.file_path AS bank_notes_file_path,
+			   t.draft_create_date, t.draft_file, drf.file_path AS draft_file_path
+		FROM tm_task t
+		 LEFT JOIN tm_client c ON t.client_id = c.client_id
+		 LEFT JOIN tm_user ou ON c.opt_id = ou.user_id
+		 LEFT JOIN tm_user au ON c.approve_id = au.user_id
+		 LEFT JOIN tm_file df ON t.doc_file = df.file_id
+		 LEFT JOIN tm_file bf ON t.bank_notes_file = bf.file_id
+		 LEFT JOIN tm_file drf ON t.draft_file = drf.file_id
+		WHERE t.is_delete = 10031002
+		  AND task_id = #{_parameter}
+	</select>
+</mapper>

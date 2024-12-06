@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neplus.erp.mapper.custom.ClientManagerMapper" >
+	<resultMap id="BaseResultMap" type="com.neplus.erp.model.TmClientPO" >
+		<id column="client_id" jdbcType="INTEGER" property="clientId" />
+		<result column="client_name" jdbcType="VARCHAR" property="clientName" />
+		<result column="client_type" jdbcType="INTEGER" property="clientType" />
+		<result column="declare_period" jdbcType="INTEGER" property="declarePeriod" />
+		<result column="opt_id" jdbcType="INTEGER" property="optId" />
+		<result column="approve_id" jdbcType="INTEGER" property="approveId" />
+		<result column="client_ict" jdbcType="VARCHAR" property="clientIct" />
+		<result column="client_vat" jdbcType="VARCHAR" property="clientVat" />
+		<result column="service_start" jdbcType="DATE" property="serviceStart" />
+		<result column="service_end" jdbcType="DATE" property="serviceEnd" />
+		<result column="client_tax_no" jdbcType="VARCHAR" property="clientTaxNo" />
+		<result column="client_kbk" jdbcType="VARCHAR" property="clientKbk" />
+		<result column="client_fee" jdbcType="VARCHAR" property="clientFee" />
+		<result column="client_mobile" jdbcType="VARCHAR" property="clientMobile" />
+		<result column="client_tel" jdbcType="VARCHAR" property="clientTel" />
+		<result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+		<result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+	</resultMap>
+	
+	
+    <!--  分页查询List -->
+    <select id="clientManagerPageQuery" resultType="com.neplus.erp.bean.clientmanager.ClientManagerBO" parameterType="pager">
+		SELECT c.*, uo.user_name AS optName, ua.user_name AS approveName FROM tm_client c
+		LEFT JOIN tm_user uo ON c.opt_id = uo.user_id
+		LEFT JOIN tm_user ua ON c.approve_id = ua.user_id
+		WHERE 1 = 1
+		<if test="condition.clientName != '' and condition.clientName != null">
+			AND c.client_name LIKE CONCAT('%',#{condition.clientName},'%')
+		</if>
+		<if test="condition.clientType != '' and condition.clientType != null">
+			AND c.client_type = #{condition.clientType}
+		</if>
+		<if test="condition.optId != '' and condition.optId != null">
+			AND c.opt_id = #{condition.optId}
+		</if>
+		<if test="condition.approveId != '' and condition.approveId != null">
+			AND c.approve_id = #{condition.approveId}
+		</if>
+		<if test="condition.declarePeriod != '' and condition.declarePeriod != null">
+		AND c.declare_period = #{condition.declarePeriod}
+		</if>
+		AND c.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		ORDER BY client_id
+	</select>
+
+    
+</mapper>
