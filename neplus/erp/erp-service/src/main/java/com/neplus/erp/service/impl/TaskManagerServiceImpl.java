@@ -4,10 +4,10 @@ package com.neplus.erp.service.impl;
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.dictionary.Fixcode;
-import com.neplus.erp.mapper.TmTaskPOMapper;
+import com.neplus.erp.mapper.TtTaskPOMapper;
 import com.neplus.erp.mapper.custom.TaskManagerMapper;
 import com.neplus.erp.model.TmFilePO;
-import com.neplus.erp.model.TmTaskPO;
+import com.neplus.erp.model.TtTaskPO;
 import com.neplus.erp.service.CommonService;
 import com.neplus.erp.service.TaskManagerService;
 import com.neplus.framework.core.bean.PageResult;
@@ -32,7 +32,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
     @Resource
     private TaskManagerMapper taskManagerMapper;
     @Resource
-    private TmTaskPOMapper tmTaskPOMapper;
+    private TtTaskPOMapper ttTaskPOMapper;
     @Resource
     private CommonService commonService;
 
@@ -74,12 +74,12 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            TmTaskPO condition = new TmTaskPO();
+            TtTaskPO condition = new TtTaskPO();
             condition.setTaskId(taskId);
             condition.setIsDelete(Fixcode.IF_TYPE_YES.fixcode);
             condition.setUpdateBy(getLoginUser().getUserCode());
             condition.setUpdateDate(new Date());
-            int count = tmTaskPOMapper.updateByPrimaryKeySelective(condition);
+            int count = ttTaskPOMapper.updateByPrimaryKeySelective(condition);
             return count > 0;
         }
         catch (Exception e)
@@ -93,7 +93,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            TmTaskPO taskInDB = tmTaskPOMapper.selectByPrimaryKey(taskId);
+            TtTaskPO taskInDB = ttTaskPOMapper.selectByPrimaryKey(taskId);
             Integer taskStatus = taskInDB.getTaskStatus();
             // firstly, upload the file and insert the record in the tm_file.
             TmFilePO filePO = commonService.insertFile(ATTACHMENT_PATH, filename, base64file);
@@ -101,33 +101,33 @@ public class TaskManagerServiceImpl implements TaskManagerService
             // when attachmentType is 1, update the field of doc_file with file id
             // when attachmentType is 2, update the field of bank_notes_file with file id
             // when attachmentType is 3, update the field of draft_file with file id
-            TmTaskPO condition = new TmTaskPO();
+            TtTaskPO condition = new TtTaskPO();
             condition.setTaskId(taskId);
             condition.setUpdateBy(getLoginUser().getUserCode());
             condition.setUpdateDate(new Date());
             switch (attachmentType)
             {
                 case 1:
-                    condition.setDocFile(filePO.getFileId());
-                    condition.setDocArchiveDate(new Date());
+//                    condition.setDocFile(filePO.getFileId());
+//                    condition.setDocArchiveDate(new Date());
                     // Check current task status, if current status is greater than Fixcode.TASK_STATUS_DOC_ARCHIVE, don't update the status
-                    if (taskStatus < Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode)
-                    {
-                        condition.setTaskStatus(Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode);
-                    }
+//                    if (taskStatus < Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode)
+//                    {
+//                        condition.setTaskStatus(Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode);
+//                    }
                     break;
                 case 2:
-                    condition.setBankNotesFile(filePO.getFileId());
-                    condition.setBankNotesArchiveDate(new Date());
+//                    condition.setBankNotesFile(filePO.getFileId());
+//                    condition.setBankNotesArchiveDate(new Date());
                     // Check current task status, if current status is greater than Fixcode.TASK_STATUS_INVOICE_ARCHIVE, don't update the status
-                    if (taskStatus < Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode)
-                    {
-                        condition.setTaskStatus(Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode);
-                    }
+//                    if (taskStatus < Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode)
+//                    {
+//                        condition.setTaskStatus(Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode);
+//                    }
                     break;
                 case 3:
-                    condition.setDraftFile(filePO.getFileId());
-                    condition.setDocArchiveDate(new Date());
+//                    condition.setDraftFile(filePO.getFileId());
+//                    condition.setDocArchiveDate(new Date());
                     // Check current task status, if current status is greater than Fixcode.TASK_STATUS_DRAFT, don't update the status
                     if (taskStatus < Fixcode.TASK_STATUS_DRAFT.fixcode)
                     {
@@ -136,7 +136,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
                     break;
                 default:
             }
-            tmTaskPOMapper.updateByPrimaryKeySelective(condition);
+            ttTaskPOMapper.updateByPrimaryKeySelective(condition);
             return filePO.getFilePath();
         }
         catch (Exception e)

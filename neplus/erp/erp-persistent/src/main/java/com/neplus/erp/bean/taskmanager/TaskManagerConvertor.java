@@ -4,6 +4,7 @@ import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskVO;
 import com.neplus.erp.model.TmTaskPO;
+import com.neplus.erp.model.TtTaskPO;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public interface TaskManagerConvertor
 {
     TaskVO toTaskVO(TaskManagerBO TaskManagerBO);
 
-    TmTaskPO toTaskPO(TaskManagerBO TaskManagerBO);
+    TtTaskPO toTaskPO(TaskManagerBO TaskManagerBO);
 
-    TmTaskPO toTaskPO(TaskManagerDTO TaskManagerDTO);
+    TtTaskPO toTaskPO(TaskManagerDTO TaskManagerDTO);
 
     TaskManagerBO toTaskManagerBO(TmTaskPO tmTaskPO);
 

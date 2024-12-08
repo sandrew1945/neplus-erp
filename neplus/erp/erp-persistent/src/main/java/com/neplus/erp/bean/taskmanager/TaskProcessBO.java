@@ -1,0 +1,21 @@
+package com.neplus.erp.bean.taskmanager;
+
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class TaskProcessBO
+{
+    private Integer processId;
+    private Integer taskId;
+    private Date optDate;
+    private Integer optBy;
+    private String userName;
+    private Integer taskStatusFrom;
+    private Integer taskStatusTo;
+    private String comment;
+    private Integer fileId;
+    private String fileName;
+    private String filePath;
+}

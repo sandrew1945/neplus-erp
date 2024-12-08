@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.neplus.erp.mapper.custom.TaskManagerMapper" >
-	<resultMap id="BaseResultMap" type="com.neplus.erp.model.TmTaskPO">
+	<resultMap id="BaseResultMap" type="com.neplus.erp.model.TtTaskPO">
 		<id column="task_id" jdbcType="INTEGER" property="taskId" />
 		<result column="client_id" jdbcType="INTEGER" property="clientId" />
 		<result column="task_type" jdbcType="INTEGER" property="taskType" />
@@ -29,9 +29,9 @@
 	
     <!--  分页查询List -->
     <select id="taskManagerPageQuery" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="pager">
-		SELECT t.task_id, t.client_id, c.client_name, c.client_type, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status, DATE_FORMAT(t.create_date, '%d-%m-%Y') AS create_date,
-		t.doc_archive_date, t.bank_notes_archive_date, t.self_exam_archive_date, t.draft_create_date
-		FROM tm_task t
+		SELECT t.task_id, t.client_id, c.client_name, c.client_type, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status, t.create_date,
+		t.dec_draft_send_date, t.dec_form_send_date
+		FROM tt_task t
 		LEFT JOIN tm_client c ON t.client_id = c.client_id
 		LEFT JOIN tm_user ou ON c.opt_id = ou.user_id
 		LEFT JOIN tm_user au ON c.approve_id = au.user_id
@@ -62,18 +62,21 @@
 	</select>
 
     <select id="getTaskInfoById" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="integer">
-		SELECT t.task_id, t.client_id, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,DATE_FORMAT(t.create_date, '%d-%m-%Y') AS create_date,
-			   t.doc_archive_date, t.doc_file, df.file_path AS doc_file_path,
-			   t.bank_notes_archive_date, t.bank_notes_file, bf.file_path AS bank_notes_file_path,
-			   t.draft_create_date, t.draft_file, drf.file_path AS draft_file_path
-		FROM tm_task t
+		SELECT t.task_id, t.client_id, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,t.create_date
+		FROM tt_task t
 		 LEFT JOIN tm_client c ON t.client_id = c.client_id
 		 LEFT JOIN tm_user ou ON c.opt_id = ou.user_id
 		 LEFT JOIN tm_user au ON c.approve_id = au.user_id
-		 LEFT JOIN tm_file df ON t.doc_file = df.file_id
-		 LEFT JOIN tm_file bf ON t.bank_notes_file = bf.file_id
-		 LEFT JOIN tm_file drf ON t.draft_file = drf.file_id
-		WHERE t.is_delete = 10031002
-		  AND task_id = #{_parameter}
+		WHERE t.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		AND task_id = #{_parameter}
+	</select>
+
+	<select id="getTaskProcessList" resultType="com.neplus.erp.bean.taskmanager.TaskProcessBO" parameterType="integer">
+		SELECT tp.process_id, tp.task_id, tp.opt_date, tp.opt_by, u.user_name, tp.task_status_from, tp.task_status_to, tp.`comment`, tp.file_id, f.file_name, f.file_path
+		FROM tt_task_process tp
+		 LEFT JOIN tm_user u ON tp.opt_by = u.user_id
+		 LEFT JOIN tm_file f ON tp.file_id = f.file_id
+		WHERE tp.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		  AND tp.task_id = #{_parameter}
 	</select>
 </mapper>

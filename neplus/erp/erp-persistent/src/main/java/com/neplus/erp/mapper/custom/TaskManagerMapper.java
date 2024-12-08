@@ -2,6 +2,7 @@ package com.neplus.erp.mapper.custom;
 
 
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
+import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.framework.core.mybatis.Pager;
 
 import java.util.List;
@@ -22,4 +23,11 @@ public interface TaskManagerMapper
 	 * @return
 	 */
 	TaskManagerBO getTaskInfoById(Integer taskId);
+
+	/**
+	 *  Get the processes list of particular task
+	 * @param taskId
+	 * @return
+	 */
+	List<TaskProcessBO> getTaskProcessList(Integer taskId);
 }

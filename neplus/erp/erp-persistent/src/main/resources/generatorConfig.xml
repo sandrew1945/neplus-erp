@@ -14,8 +14,13 @@
       <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
       <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
     </table>
-    <table schema="" tableName="tm_task" domainObjectName="TmTaskPO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">
+    <table schema="" tableName="tt_task" domainObjectName="TtTaskPO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">
       <generatedKey column="task_id" sqlStatement="JDBC" identity="true" />
+      <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+      <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    </table>
+    <table schema="" tableName="tt_task_process" domainObjectName="TtTaskProcessPO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">
+      <generatedKey column="process_id" sqlStatement="JDBC" identity="true" />
       <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
       <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
     </table>

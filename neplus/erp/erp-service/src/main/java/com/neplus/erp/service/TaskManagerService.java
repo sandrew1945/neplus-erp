@@ -4,8 +4,11 @@ import com.neplus.erp.bean.clientmanager.ClientManagerBO;
 import com.neplus.erp.bean.clientmanager.ClientManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
+import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.framework.core.bean.PageResult;
 import com.neplus.framework.core.exception.ServiceException;
+
+import java.util.List;
 
 
 /**
@@ -52,4 +55,12 @@ public interface TaskManagerService extends BaseService
 	 * @throws ServiceException
 	 */
 	String uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename) throws ServiceException;
+
+	/**
+	 *  Get the processes list of particular task
+	 * @param taskId
+	 * @return
+	 * @throws ServiceException
+	 */
+	List<TaskProcessBO> getTaskProcessList(Integer taskId) throws ServiceException;
 }
