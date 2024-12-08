@@ -3,6 +3,7 @@ package com.neplus.erp.service.impl;
 
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
+import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.erp.dictionary.Fixcode;
 import com.neplus.erp.mapper.TtTaskPOMapper;
 import com.neplus.erp.mapper.custom.TaskManagerMapper;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -143,5 +145,11 @@ public class TaskManagerServiceImpl implements TaskManagerService
         {
             throw new ServiceException("Failed to upload the attachment.", e);
         }
+    }
+
+    @Override
+    public List<TaskProcessBO> getTaskProcessList(Integer taskId) throws ServiceException
+    {
+        return null;
     }
 }
