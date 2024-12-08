@@ -6,9 +6,11 @@ import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.erp.dictionary.Fixcode;
 import com.neplus.erp.mapper.TtTaskPOMapper;
+import com.neplus.erp.mapper.TtTaskProcessPOMapper;
 import com.neplus.erp.mapper.custom.TaskManagerMapper;
 import com.neplus.erp.model.TmFilePO;
 import com.neplus.erp.model.TtTaskPO;
+import com.neplus.erp.model.TtTaskProcessPO;
 import com.neplus.erp.service.CommonService;
 import com.neplus.erp.service.TaskManagerService;
 import com.neplus.framework.core.bean.PageResult;
@@ -17,6 +19,7 @@ import com.neplus.framework.core.mybatis.PageQueryBuilder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
     private TtTaskPOMapper ttTaskPOMapper;
     @Resource
     private CommonService commonService;
+    @Resource
+    private TtTaskProcessPOMapper ttTaskProcessPOMapper;
 
     private static final String ATTACHMENT_PATH = "/attachment";
 
@@ -150,6 +155,65 @@ public class TaskManagerServiceImpl implements TaskManagerService
     @Override
     public List<TaskProcessBO> getTaskProcessList(Integer taskId) throws ServiceException
     {
-        return null;
+        try
+        {
+            return taskManagerMapper.getTaskProcessList(taskId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to query the task processes list.", e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, MultipartFile file) throws ServiceException
+    {
+        try
+        {
+            // Firstly, create a record of task process.
+            TtTaskPO originTask = ttTaskPOMapper.selectByPrimaryKey(taskId);
+            TtTaskProcessPO taskProcess = new TtTaskProcessPO();
+            taskProcess.setTaskId(taskId);
+            taskProcess.setOptDate(new Date());
+            taskProcess.setOptBy("" + getLoginUser().getUserId());
+            taskProcess.setTaskStatusFrom(originTask.getTaskStatus());
+            taskProcess.setTaskStatusTo(toStatus);
+            taskProcess.setComment(comment);
+            if (null != file)
+            {
+                TmFilePO filePO = commonService.insertFile(ATTACHMENT_PATH, file);
+                Integer fileId = filePO.getFileId();
+                taskProcess.setFileId(fileId);
+            }
+            taskProcess.setIsDelete(Fixcode.IF_TYPE_NO.fixcode);
+            taskProcess.setCreateBy(getLoginUser().getUserCode());
+            taskProcess.setCreateDate(new Date());
+            ttTaskProcessPOMapper.insertSelective(taskProcess);
+            // Then update the task's status
+            TtTaskPO condition = new TtTaskPO();
+            condition.setTaskId(taskId);
+            condition.setTaskStatus(toStatus);
+            condition.setUpdateBy(getLoginUser().getUserCode());
+            condition.setUpdateDate(new Date());
+            int count = ttTaskPOMapper.updateByPrimaryKey(condition);
+            return count > 0;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status.", e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToStart(Integer taskId, String comment, MultipartFile file) throws ServiceException
+    {
+        try
+        {
+            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_PROCESSING.fixcode, comment, file);
+        }
+        catch (ServiceException e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_PROCESSING.getDesc(), e);
+        }
     }
 }

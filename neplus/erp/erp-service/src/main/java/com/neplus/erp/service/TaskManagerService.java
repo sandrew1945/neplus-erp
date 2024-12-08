@@ -7,6 +7,7 @@ import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.framework.core.bean.PageResult;
 import com.neplus.framework.core.exception.ServiceException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -63,4 +64,21 @@ public interface TaskManagerService extends BaseService
 	 * @throws ServiceException
 	 */
 	List<TaskProcessBO> getTaskProcessList(Integer taskId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to the particular status
+	 * @param taskId
+	 * @param toStatus
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, MultipartFile file) throws ServiceException;
+
+	/**
+	 * Update the task's status to start
+	 * @param taskId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToStart(Integer taskId, String comment, MultipartFile file) throws ServiceException;
 }

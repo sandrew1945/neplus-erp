@@ -72,11 +72,12 @@
 	</select>
 
 	<select id="getTaskProcessList" resultType="com.neplus.erp.bean.taskmanager.TaskProcessBO" parameterType="integer">
-		SELECT tp.process_id, tp.task_id, tp.opt_date, tp.opt_by, u.user_name, tp.task_status_from, tp.task_status_to, tp.`comment`, tp.file_id, f.file_name, f.file_path
+		SELECT tp.process_id, tp.task_id, tp.opt_date, tp.opt_by, u.user_name AS opt_name, tp.task_status_from, tp.task_status_to, tp.`comment`, tp.file_id, f.file_name, f.file_path, u.avatar
 		FROM tt_task_process tp
 		 LEFT JOIN tm_user u ON tp.opt_by = u.user_id
 		 LEFT JOIN tm_file f ON tp.file_id = f.file_id
 		WHERE tp.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
 		  AND tp.task_id = #{_parameter}
+		ORDER BY tp.create_date, tp.process_id ASC
 	</select>
 </mapper>

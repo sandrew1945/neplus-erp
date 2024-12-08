@@ -11,11 +11,12 @@ public class TaskProcessBO
     private Integer taskId;
     private Date optDate;
     private Integer optBy;
-    private String userName;
+    private String optName;
     private Integer taskStatusFrom;
     private Integer taskStatusTo;
     private String comment;
     private Integer fileId;
     private String fileName;
     private String filePath;
+    private String avatar;
 }

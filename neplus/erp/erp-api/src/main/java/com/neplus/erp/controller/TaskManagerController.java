@@ -2,10 +2,7 @@ package com.neplus.erp.controller;
 
 import com.neplus.erp.bean.clientmanager.ClientManagerBO;
 import com.neplus.erp.bean.clientmanager.ClientVO;
-import com.neplus.erp.bean.taskmanager.TaskManagerBO;
-import com.neplus.erp.bean.taskmanager.TaskManagerConvertor;
-import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
-import com.neplus.erp.bean.taskmanager.TaskVO;
+import com.neplus.erp.bean.taskmanager.*;
 import com.neplus.erp.model.TmFilePO;
 import com.neplus.erp.service.ClientManagerService;
 import com.neplus.erp.service.CommonService;
@@ -18,8 +15,10 @@ import com.neplus.framework.core.util.DateTimeUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -131,7 +130,7 @@ public class TaskManagerController extends BaseController
 	 * @return
 	 */
 	@PostMapping(value = "uploadAttachment")
-	public JsonResult<String> uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename)
+	public JsonResult<String> uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename) throws JsonException
 	{
 		JsonResult<String> result = new JsonResult<>();
 		try
@@ -141,7 +140,43 @@ public class TaskManagerController extends BaseController
 		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
-			throw new JsonException("图片上传失败", e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 *  Get the processes list of particular task
+	 * @param taskId
+	 * @return
+	 * @throws JsonException
+	 */
+	@GetMapping(value = "getTaskProcessList")
+	public JsonResult<List<TaskProcessBO>> getTaskProcessList(Integer taskId) throws JsonException
+	{
+		JsonResult<List<TaskProcessBO>> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.getTaskProcessList(taskId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	@PostMapping(value = "makeTaskStart")
+	public JsonResult<Boolean> makeTaskStart(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) MultipartFile file) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToStart(taskId, comment, file));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
 		}
 	}
 
