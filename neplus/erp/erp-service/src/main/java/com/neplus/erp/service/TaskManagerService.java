@@ -48,16 +48,6 @@ public interface TaskManagerService extends BaseService
 	Boolean deleteTaskById(Integer taskId) throws ServiceException;
 
 	/**
-	 *  Upload the document for doc, banknotes or draft depends on attachmentType
-	 * @param attachmentType
-	 * @param base64file
-	 * @param filename
-	 * @return
-	 * @throws ServiceException
-	 */
-	String uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename) throws ServiceException;
-
-	/**
 	 *  Get the processes list of particular task
 	 * @param taskId
 	 * @return
@@ -72,7 +62,7 @@ public interface TaskManagerService extends BaseService
 	 * @return
 	 * @throws ServiceException
 	 */
-	Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, MultipartFile file) throws ServiceException;
+	Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException;
 
 	/**
 	 * Update the task's status to start
@@ -80,5 +70,15 @@ public interface TaskManagerService extends BaseService
 	 * @return
 	 * @throws ServiceException
 	 */
-	Boolean updateTaskToStart(Integer taskId, String comment, MultipartFile file) throws ServiceException;
+	Boolean updateTaskToStart(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to self approved
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToSelfApproved(Integer taskId, String comment, Integer fileId) throws ServiceException;
 }

@@ -36,6 +36,8 @@ public class TaskManagerController extends BaseController
 	@Resource
 	private CommonService commonService;
 
+	private static final String ATTACHMENT_PATH = "/attachment";
+
 
 
 	/**
@@ -123,19 +125,18 @@ public class TaskManagerController extends BaseController
 
 	/**
 	 *  Upload the attachment and update the corresponding field in tm_task based on the attachmentType.
-	 * @param taskId
-	 * @param attachmentType
 	 * @param base64file
 	 * @param filename
 	 * @return
 	 */
 	@PostMapping(value = "uploadAttachment")
-	public JsonResult<String> uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename) throws JsonException
+	public JsonResult<Integer> uploadAttachment(String base64file, String filename) throws JsonException
 	{
-		JsonResult<String> result = new JsonResult<>();
+		JsonResult<Integer> result = new JsonResult<>();
 		try
 		{
-			return result.requestSuccess(taskManagerService.uploadAttachment(taskId, attachmentType, base64file, filename));
+			TmFilePO filePO = commonService.insertFile(ATTACHMENT_PATH, filename, base64file);
+			return result.requestSuccess(filePO.getFileId());
 		}
 		catch (Exception e)
 		{
@@ -165,13 +166,21 @@ public class TaskManagerController extends BaseController
 		}
 	}
 
+	/**
+	 *  Update the task's status to start
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
 	@PostMapping(value = "makeTaskStart")
-	public JsonResult<Boolean> makeTaskStart(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) MultipartFile file) throws JsonException
+	public JsonResult<Boolean> makeTaskStart(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
 	{
 		JsonResult<Boolean> result = new JsonResult<>();
 		try
 		{
-			return result.requestSuccess(taskManagerService.updateTaskToStart(taskId, comment, file));
+			return result.requestSuccess(taskManagerService.updateTaskToStart(taskId, comment, fileId));
 		}
 		catch (Exception e)
 		{
@@ -180,4 +189,26 @@ public class TaskManagerController extends BaseController
 		}
 	}
 
+	/**
+	 *
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
+	@PostMapping(value = "makeTaskSelfApproved")
+	public JsonResult<Boolean> makeTaskSelfApproved(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToSelfApproved(taskId, comment, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
 }

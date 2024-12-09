@@ -15,7 +15,7 @@ public class JsonResult<T>
 
     private Object data;
 
-    public JsonResult requestSuccess(T data)
+    public JsonResult<T> requestSuccess(T data)
     {
         this.result = true;
         this.msg = "";
@@ -23,14 +23,14 @@ public class JsonResult<T>
         return this;
     }
 
-    public JsonResult requestSuccess()
+    public JsonResult<T> requestSuccess()
     {
         this.result = true;
         this.msg = "";
         return this;
     }
 
-    public JsonResult requestFailure(String errMsg)
+    public JsonResult<T> requestFailure(String errMsg)
     {
         this.result = false;
         this.msg = errMsg;

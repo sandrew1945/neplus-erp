@@ -43,7 +43,6 @@ public class TaskManagerServiceImpl implements TaskManagerService
     @Resource
     private TtTaskProcessPOMapper ttTaskProcessPOMapper;
 
-    private static final String ATTACHMENT_PATH = "/attachment";
 
     @Override
     public PageResult<TaskManagerBO> taskManagerPageQuery(TaskManagerDTO condition, Integer roleType, int limit, int curPage) throws ServiceException
@@ -96,63 +95,6 @@ public class TaskManagerServiceImpl implements TaskManagerService
     }
 
     @Override
-    public String uploadAttachment(Integer taskId, Integer attachmentType, String base64file, String filename) throws ServiceException
-    {
-        try
-        {
-            TtTaskPO taskInDB = ttTaskPOMapper.selectByPrimaryKey(taskId);
-            Integer taskStatus = taskInDB.getTaskStatus();
-            // firstly, upload the file and insert the record in the tm_file.
-            TmFilePO filePO = commonService.insertFile(ATTACHMENT_PATH, filename, base64file);
-            // then update the corresponding field in tm_task.
-            // when attachmentType is 1, update the field of doc_file with file id
-            // when attachmentType is 2, update the field of bank_notes_file with file id
-            // when attachmentType is 3, update the field of draft_file with file id
-            TtTaskPO condition = new TtTaskPO();
-            condition.setTaskId(taskId);
-            condition.setUpdateBy(getLoginUser().getUserCode());
-            condition.setUpdateDate(new Date());
-            switch (attachmentType)
-            {
-                case 1:
-//                    condition.setDocFile(filePO.getFileId());
-//                    condition.setDocArchiveDate(new Date());
-                    // Check current task status, if current status is greater than Fixcode.TASK_STATUS_DOC_ARCHIVE, don't update the status
-//                    if (taskStatus < Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode)
-//                    {
-//                        condition.setTaskStatus(Fixcode.TASK_STATUS_DOC_ARCHIVE.fixcode);
-//                    }
-                    break;
-                case 2:
-//                    condition.setBankNotesFile(filePO.getFileId());
-//                    condition.setBankNotesArchiveDate(new Date());
-                    // Check current task status, if current status is greater than Fixcode.TASK_STATUS_INVOICE_ARCHIVE, don't update the status
-//                    if (taskStatus < Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode)
-//                    {
-//                        condition.setTaskStatus(Fixcode.TASK_STATUS_INVOICE_ARCHIVE.fixcode);
-//                    }
-                    break;
-                case 3:
-//                    condition.setDraftFile(filePO.getFileId());
-//                    condition.setDocArchiveDate(new Date());
-                    // Check current task status, if current status is greater than Fixcode.TASK_STATUS_DRAFT, don't update the status
-                    if (taskStatus < Fixcode.TASK_STATUS_DRAFT.fixcode)
-                    {
-                        condition.setTaskStatus(Fixcode.TASK_STATUS_DRAFT.fixcode);
-                    }
-                    break;
-                default:
-            }
-            ttTaskPOMapper.updateByPrimaryKeySelective(condition);
-            return filePO.getFilePath();
-        }
-        catch (Exception e)
-        {
-            throw new ServiceException("Failed to upload the attachment.", e);
-        }
-    }
-
-    @Override
     public List<TaskProcessBO> getTaskProcessList(Integer taskId) throws ServiceException
     {
         try
@@ -166,7 +108,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
     }
 
     @Override
-    public Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, MultipartFile file) throws ServiceException
+    public Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException
     {
         try
         {
@@ -179,10 +121,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
             taskProcess.setTaskStatusFrom(originTask.getTaskStatus());
             taskProcess.setTaskStatusTo(toStatus);
             taskProcess.setComment(comment);
-            if (null != file)
+            if (null != fileId)
             {
-                TmFilePO filePO = commonService.insertFile(ATTACHMENT_PATH, file);
-                Integer fileId = filePO.getFileId();
                 taskProcess.setFileId(fileId);
             }
             taskProcess.setIsDelete(Fixcode.IF_TYPE_NO.fixcode);
@@ -195,7 +135,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
             condition.setTaskStatus(toStatus);
             condition.setUpdateBy(getLoginUser().getUserCode());
             condition.setUpdateDate(new Date());
-            int count = ttTaskPOMapper.updateByPrimaryKey(condition);
+            int count = ttTaskPOMapper.updateByPrimaryKeySelective(condition);
             return count > 0;
         }
         catch (Exception e)
@@ -205,11 +145,23 @@ public class TaskManagerServiceImpl implements TaskManagerService
     }
 
     @Override
-    public Boolean updateTaskToStart(Integer taskId, String comment, MultipartFile file) throws ServiceException
+    public Boolean updateTaskToStart(Integer taskId, String comment, Integer fileId) throws ServiceException
     {
         try
         {
-            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_PROCESSING.fixcode, comment, file);
+            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_PROCESSING.fixcode, comment, fileId);
+        }
+        catch (ServiceException e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_PROCESSING.getDesc(), e);
+        }
+    }
+
+    public Boolean updateTaskToSelfApproved(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_SELF_EXAM.fixcode, comment, fileId);
         }
         catch (ServiceException e)
         {
