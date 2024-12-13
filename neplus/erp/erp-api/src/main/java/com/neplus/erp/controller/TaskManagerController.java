@@ -190,7 +190,7 @@ public class TaskManagerController extends BaseController
 	}
 
 	/**
-	 *
+	 *  Update the task's status to self approved.
 	 * @param taskId
 	 * @param comment
 	 * @param fileId
@@ -211,4 +211,69 @@ public class TaskManagerController extends BaseController
 			throw new JsonException(e.getMessage(), e);
 		}
 	}
+
+	/**
+	 *  Update the task's status to manager approved.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
+	@PostMapping(value = "makeTaskApproved")
+	public JsonResult<Boolean> makeTaskApproved(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToApproved(taskId, comment, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 *  Update the task's status to manager rejection.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
+	@PostMapping(value = "makeTaskInnerReject")
+	public JsonResult<Boolean> makeTaskInnerReject(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToInnerReject(taskId, comment, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	@PostMapping(value = "makeTaskDraftSent")
+	public JsonResult<Boolean> makeTaskDraftSent(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			System.out.println("taskId ======>" + taskId);
+			System.out.println("comment ======>" + comment);
+			System.out.println("fileId ======>" + fileId);
+			return result.requestSuccess(true);
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
 }

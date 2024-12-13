@@ -81,4 +81,24 @@ public interface TaskManagerService extends BaseService
 	 * @throws ServiceException
 	 */
 	Boolean updateTaskToSelfApproved(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to manager approved.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToApproved(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to manager rejection.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToInnerReject(Integer taskId, String comment, Integer fileId) throws ServiceException;
 }

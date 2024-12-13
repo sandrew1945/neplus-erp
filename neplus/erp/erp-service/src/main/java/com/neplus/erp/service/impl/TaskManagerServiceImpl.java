@@ -165,7 +165,33 @@ public class TaskManagerServiceImpl implements TaskManagerService
         }
         catch (ServiceException e)
         {
-            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_PROCESSING.getDesc(), e);
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_SELF_EXAM.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToApproved(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_APPROVED.fixcode, comment, fileId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_APPROVED.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToInnerReject(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_INNER_REJ.fixcode, comment, fileId);
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_INNER_REJ.getDesc(), e);
         }
     }
 }
