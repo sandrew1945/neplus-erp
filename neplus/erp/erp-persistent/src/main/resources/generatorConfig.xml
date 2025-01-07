@@ -29,6 +29,16 @@
       <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
       <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
     </table>
+    <table schema="" tableName="tt_mail_log" domainObjectName="TtMailLogPO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">
+      <generatedKey column="mail_log_id" sqlStatement="JDBC" identity="true" />
+      <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+      <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    </table>
+    <table schema="" tableName="tt_mail_template" domainObjectName="TtMailTemplatePO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">
+      <generatedKey column="template_id" sqlStatement="JDBC" identity="true" />
+      <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+      <columnOverride column="update_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    </table>
     <!--    <table schema="" tableName="tm_user" domainObjectName="TmUserPO" enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" selectByExampleQueryId="true">-->
 <!--      <generatedKey column="user_id" sqlStatement="JDBC" identity="true" />-->
 <!--      <columnOverride column="create_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>-->

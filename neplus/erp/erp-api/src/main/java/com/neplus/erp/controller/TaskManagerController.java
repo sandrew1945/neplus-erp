@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class TaskManagerController extends BaseController
 
 	/**
 	 *  Paginated query the tasks list by particular conditions.
-	 * @param clientName
+	 * @param taskName
 	 * @param clientType
 	 * @param taskType
 	 * @param taskStatus
@@ -54,15 +56,15 @@ public class TaskManagerController extends BaseController
 	 * @throws JsonException
 	 */
 	@PostMapping(value = "/taskManagerPageQuery")
-	public JsonResult<PageResult<TaskManagerBO>> clientManagerPageQuery(@RequestParam(required = false) String clientName, @RequestParam(required = false) Integer clientType,
-																		  @RequestParam(required = false) Integer taskType, @RequestParam(required = false) Integer taskStatus,
-																		  @RequestParam(required = false) Date startFrom, @RequestParam(required = false) Date endWith, int limit, int curPage) throws JsonException
+	public JsonResult<PageResult<TaskManagerBO>> clientManagerPageQuery(@RequestParam(required = false) String taskName, @RequestParam(required = false) Integer clientType,
+																		@RequestParam(required = false) Integer taskType, @RequestParam(required = false, value = "taskStatus") List<Integer> taskStatus,
+																		@RequestParam(required = false) LocalDate startFrom, @RequestParam(required = false) LocalDate endWith, int limit, int curPage) throws JsonException
 	{
 		JsonResult<PageResult<TaskManagerBO>> result = new JsonResult<>();
 		try
 		{
 			TaskManagerDTO condition = new TaskManagerDTO();
-			condition.setClientName(clientName);
+			condition.setTaskName(taskName);
 			condition.setClientType(clientType);
 			condition.setTaskType(taskType);
 			condition.setTaskStatus(taskStatus);
@@ -259,15 +261,76 @@ public class TaskManagerController extends BaseController
 	}
 
 	@PostMapping(value = "makeTaskDraftSent")
-	public JsonResult<Boolean> makeTaskDraftSent(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	public JsonResult<Boolean> makeTaskDraftSent(Integer taskId, @RequestParam(required = false) String emailContent, @RequestParam(required = false) Integer fileId) throws JsonException
 	{
 		JsonResult<Boolean> result = new JsonResult<>();
 		try
 		{
-			System.out.println("taskId ======>" + taskId);
-			System.out.println("comment ======>" + comment);
-			System.out.println("fileId ======>" + fileId);
-			return result.requestSuccess(true);
+			log.debug("taskId ======>" + taskId);
+			log.debug("emailContent ======>" + emailContent);
+			log.debug("fileId ======>" + fileId);
+			return result.requestSuccess(taskManagerService.updateTaskToDraftSend(taskId, emailContent, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 *  Update the task's status to client approved.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
+	@PostMapping(value = "makeClientApproved")
+	public JsonResult<Boolean> makeClientApproved(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToClientApproved(taskId, comment, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 *  Update the task's status to client rejection.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws JsonException
+	 */
+	@PostMapping(value = "makeClientReject")
+	public JsonResult<Boolean> makeClientReject(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToClientReject(taskId, comment, fileId));
+		}
+		catch (Exception e)
+		{
+			log.error(e.getMessage(), e);
+			throw new JsonException(e.getMessage(), e);
+		}
+	}
+
+	@PostMapping(value = "makeTaskDeclaration")
+	public JsonResult<Boolean> makeTaskDeclaration(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	{
+		JsonResult<Boolean> result = new JsonResult<>();
+		try
+		{
+			return result.requestSuccess(taskManagerService.updateTaskToDeclaration(taskId, comment, fileId));
 		}
 		catch (Exception e)
 		{

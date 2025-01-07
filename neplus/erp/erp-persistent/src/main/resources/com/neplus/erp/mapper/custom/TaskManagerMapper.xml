@@ -29,7 +29,7 @@
 	
     <!--  分页查询List -->
     <select id="taskManagerPageQuery" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="pager">
-		SELECT t.task_id, t.client_id, c.client_name, c.client_type, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status, t.create_date,
+		SELECT t.task_id, t.client_id, t.task_name, c.client_name, c.client_type, ou.user_name as opt_name, c.approve_id, au.user_name AS approve_name, t.task_type, t.task_status, t.create_date,
 		t.dec_draft_send_date, t.dec_form_send_date
 		FROM tt_task t
 		LEFT JOIN tm_client c ON t.client_id = c.client_id
@@ -37,8 +37,8 @@
 		LEFT JOIN tm_user au ON c.approve_id = au.user_id
 		WHERE 1 = 1
 		AND t.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
-		<if test="condition.clientName != '' and condition.clientName != null">
-		AND c.client_name LIKE CONCAT('%',#{condition.clientName},'%')
+		<if test="condition.taskName != '' and condition.taskName != null">
+		AND t.task_name LIKE CONCAT('%',#{condition.taskName},'%')
 		</if>
 		<if test="condition.clientType != '' and condition.clientType != null">
 		AND c.client_type = #{condition.clientType}
@@ -46,23 +46,29 @@
 		<if test="condition.taskType != '' and condition.taskType != null">
 		AND t.task_type = #{condition.taskType}
 		</if>
-		<if test="condition.taskStatus != '' and condition.taskStatus != null">
-		AND t.task_status = #{condition.taskStatus}
+		<if test="condition.taskStatus != null">
+			AND t.task_status IN
+			<foreach collection="condition.taskStatus" index="index" item="item" open="(" separator="," close=")">
+				#{item}
+			</foreach>
 		</if>
 		<if test="condition.startFrom != '' and condition.startFrom != null">
-		AND t.create_date &gt;= str_to_date(#{condition.startFrom}, '%d-%m-%Y %H:%i:%s')
+		AND t.create_date &gt;= str_to_date(CONCAT(#{condition.startFrom}, ' 00:00:00'), '%d-%m-%Y %H:%i:%s')
 		</if>
 		<if test="condition.endWith != '' and condition.endWith != null">
-		AND t.create_date &lt;= str_to_date(#{condition.endWith}, '%d-%m-%Y %H:%i:%s')
+		AND t.create_date &lt;= str_to_date(CONCAT(#{condition.endWith}, ' 23:59:59'), '%d-%m-%Y %H:%i:%s')
 		</if>
 		<if test="condition.optId != '' and condition.optId != null">
 		AND c.opt_id = #{condition.optId}
+		</if>
+		<if test="condition.approveId != '' and condition.approveId != null">
+		AND c.approve_id = #{condition.approveId}
 		</if>
 		ORDER BY task_id
 	</select>
 
     <select id="getTaskInfoById" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="integer">
-		SELECT t.task_id, t.client_id, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,t.create_date
+		SELECT t.task_id, t.client_id, t.task_name, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,t.create_date
 		FROM tt_task t
 		 LEFT JOIN tm_client c ON t.client_id = c.client_id
 		 LEFT JOIN tm_user ou ON c.opt_id = ou.user_id

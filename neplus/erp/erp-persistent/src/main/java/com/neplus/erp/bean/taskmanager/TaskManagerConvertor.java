@@ -22,7 +22,7 @@ public interface TaskManagerConvertor
 
     TtTaskPO toTaskPO(TaskManagerBO TaskManagerBO);
 
-    TtTaskPO toTaskPO(TaskManagerDTO TaskManagerDTO);
+//    TtTaskPO toTaskPO(TaskManagerDTO TaskManagerDTO);
 
     TaskManagerBO toTaskManagerBO(TmTaskPO tmTaskPO);
 

@@ -2,6 +2,8 @@ package com.neplus.framework.core.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -85,6 +87,16 @@ public class DateTimeUtil
 			return null;
 		}
 		SimpleDateFormat formate = new SimpleDateFormat(DATE_PATTERN_DATE);
+		return formate.format(date);
+	}
+
+	public static String parseDateToDate(LocalDate date) throws ParseException
+	{
+		if (date == null)
+		{
+			return null;
+		}
+		DateTimeFormatter formate = DateTimeFormatter.ofPattern(DATE_PATTERN_DATE);
 		return formate.format(date);
 	}
 

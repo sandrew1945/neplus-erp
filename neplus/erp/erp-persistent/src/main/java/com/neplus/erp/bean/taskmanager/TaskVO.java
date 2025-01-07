@@ -1,5 +1,6 @@
 package com.neplus.erp.bean.taskmanager;
 
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,7 +15,9 @@ public class TaskVO
     private String clientEmail;
     private String clientMobile;
     private String optName;
+    private Integer approveId;
     private String approveName;
+    private String taskName;
     private Integer taskType;
     private Integer taskStatus;
     private Integer decDraftFile;

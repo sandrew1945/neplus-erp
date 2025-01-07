@@ -17,6 +17,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -73,6 +74,11 @@ public class PaginationInterceptor extends BaseInterceptor
 			{
 				MetaObject mo = (MetaObject) Reflections.getFieldValue(boundSql, "metaParameters");
 				Reflections.setFieldValue(newBoundSql, "metaParameters", mo);
+			}
+			if (Reflections.getFieldValue(boundSql, "additionalParameters") != null)
+			{
+				HashMap mo = (HashMap) Reflections.getFieldValue(boundSql, "additionalParameters");
+				Reflections.setFieldValue(newBoundSql, "additionalParameters", mo);
 			}
 			//解决MyBatis 分页foreach 参数失效 end
 			MappedStatement newMs = copyFromMappedStatement(mappedStatement, new BoundSqlSqlSource(newBoundSql));

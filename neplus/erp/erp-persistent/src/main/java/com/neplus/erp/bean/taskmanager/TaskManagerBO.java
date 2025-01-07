@@ -21,7 +21,9 @@ public class TaskManagerBO implements BO
     private String clientEmail;
     private String clientMobile;
     private String optName;
+    private Integer approveId;
     private String approveName;
+    private String taskName;
     private Integer taskType;
     private Integer taskStatus;
     private Integer decDraftFile;

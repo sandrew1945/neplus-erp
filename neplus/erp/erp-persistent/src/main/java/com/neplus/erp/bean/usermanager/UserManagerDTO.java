@@ -3,6 +3,7 @@ package com.neplus.erp.bean.usermanager;
 import com.neplus.framework.core.bean.DTO;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -30,7 +31,7 @@ public class UserManagerDTO implements DTO
 
     private String email;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     private String avatar;
 

@@ -4,6 +4,7 @@ package com.neplus.erp.mapper.custom;
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.framework.core.mybatis.Pager;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

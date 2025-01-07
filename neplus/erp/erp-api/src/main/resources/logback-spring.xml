@@ -43,7 +43,7 @@
         <appender-ref ref="STDOUT" />
         <!--<appender-ref ref="SAVE-TO-FILE" />-->
     </root>
-    <logger name="com.neplus.erp" additivity="false" level="debug">
+    <logger name="com.neplus" additivity="false" level="debug">
         <appender-ref ref="STDOUT" />
 <!--        <appender-ref ref="SAVE-TO-FILE" />-->
     </logger>

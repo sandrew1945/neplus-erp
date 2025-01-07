@@ -27,6 +27,7 @@ public interface UserManagerConvertor
 
     UserManagerBO toUserManagerBO(TmUserPO tmUserPO);
 
+    @Mapping(source = "userManagerDTO.birthday", target = "birthday")
     TmUserPO toUserPO(UserManagerDTO userManagerDTO);
 
 

@@ -5,10 +5,11 @@ import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.erp.dictionary.Fixcode;
+import com.neplus.erp.mapper.TtMailLogPOMapper;
 import com.neplus.erp.mapper.TtTaskPOMapper;
 import com.neplus.erp.mapper.TtTaskProcessPOMapper;
 import com.neplus.erp.mapper.custom.TaskManagerMapper;
-import com.neplus.erp.model.TmFilePO;
+import com.neplus.erp.model.TtMailLogPO;
 import com.neplus.erp.model.TtTaskPO;
 import com.neplus.erp.model.TtTaskProcessPO;
 import com.neplus.erp.service.CommonService;
@@ -18,8 +19,8 @@ import com.neplus.framework.core.exception.ServiceException;
 import com.neplus.framework.core.mybatis.PageQueryBuilder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,10 @@ public class TaskManagerServiceImpl implements TaskManagerService
     private CommonService commonService;
     @Resource
     private TtTaskProcessPOMapper ttTaskProcessPOMapper;
+    @Resource
+    private TtMailLogPOMapper ttMailLogPOMapper;
+    @Value("${neplus.email.send.switch}")
+    private boolean isSendEmail;
 
 
     @Override
@@ -54,6 +59,10 @@ public class TaskManagerServiceImpl implements TaskManagerService
             {
                 condition.setOptId(getLoginUser().getUserId());
             }
+//            if (Fixcode.ROLE_TYPE_ADMIN.fixcode.equals(roleType) || Fixcode.ROLE_TYPE_SYSTEM.fixcode.equals(roleType))
+//            {
+//                condition.setApproveId(getLoginUser().getUserId());
+//            }
             return PageQueryBuilder.pageQuery(taskManagerMapper, "taskManagerPageQuery", condition, curPage, limit);
         }
         catch (Exception e)
@@ -108,7 +117,7 @@ public class TaskManagerServiceImpl implements TaskManagerService
     }
 
     @Override
-    public Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException
+    public Integer updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException
     {
         try
         {
@@ -135,8 +144,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
             condition.setTaskStatus(toStatus);
             condition.setUpdateBy(getLoginUser().getUserCode());
             condition.setUpdateDate(new Date());
-            int count = ttTaskPOMapper.updateByPrimaryKeySelective(condition);
-            return count > 0;
+            ttTaskPOMapper.updateByPrimaryKeySelective(condition);
+            return taskProcess.getProcessId();
         }
         catch (Exception e)
         {
@@ -149,7 +158,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_PROCESSING.fixcode, comment, fileId);
+            Integer processId= updateTaskStatus(taskId, Fixcode.TASK_STATUS_PROCESSING.fixcode, comment, fileId);
+            return null != processId;
         }
         catch (ServiceException e)
         {
@@ -161,7 +171,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_SELF_EXAM.fixcode, comment, fileId);
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_SELF_EXAM.fixcode, comment, fileId);
+            return null != processId;
         }
         catch (ServiceException e)
         {
@@ -174,7 +185,8 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_APPROVED.fixcode, comment, fileId);
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_APPROVED.fixcode, comment, fileId);
+            return null != processId;
         }
         catch (Exception e)
         {
@@ -187,11 +199,86 @@ public class TaskManagerServiceImpl implements TaskManagerService
     {
         try
         {
-            return updateTaskStatus(taskId, Fixcode.TASK_STATUS_INNER_REJ.fixcode, comment, fileId);
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_INNER_REJ.fixcode, comment, fileId);
+            return null != processId;
         }
         catch (Exception e)
         {
             throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_INNER_REJ.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToDraftSend(Integer taskId, String mailContent, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            // Send the email
+            if (isSendEmail)
+            {
+                log.debug("Sending Email ..... ");
+            }
+            // Update the task's status
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_DRAFT.fixcode, null, fileId);
+            // Lastly, record the email sending log.
+            String clientEmail = getTaskInfo(taskId).getClientEmail();
+            TtMailLogPO mailLog = new TtMailLogPO();
+            mailLog.setProcessId(processId);
+            mailLog.setSenderId(getLoginUser().getUserId());
+            mailLog.setRecipientEmail(clientEmail);
+            mailLog.setAttachment(fileId);
+            mailLog.setEmailContent(mailContent);
+            mailLog.setSendTime(new Date());
+            mailLog.setCreateBy(getLoginUser().getUserCode());
+            mailLog.setCreateDate(new Date());
+            int count = ttMailLogPOMapper.insertSelective(mailLog);
+            return count > 0;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_DRAFT.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToClientApproved(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_UNDECLARATION.fixcode, comment, fileId);
+            return null != processId;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_UNDECLARATION.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToClientReject(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_OUTER_REJ.fixcode, comment, fileId);
+            return null != processId;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_OUTER_REJ.getDesc(), e);
+        }
+    }
+
+    @Override
+    public Boolean updateTaskToDeclaration(Integer taskId, String comment, Integer fileId) throws ServiceException
+    {
+        try
+        {
+            Integer processId = updateTaskStatus(taskId, Fixcode.TASK_STATUS_SUBMIT.fixcode, comment, fileId);
+            return null != processId;
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("Failed to update the task status to " + Fixcode.TASK_STATUS_SUBMIT.getDesc(), e);
         }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -77,6 +78,28 @@ public class CommonServiceImpl implements CommonService
 
             }
             return fileUtil.download(basePath + relativePath);
+        }
+        catch (Exception e)
+        {
+            log.error(e.getMessage(), e);
+            throw new ServiceException("获取文件失败", e);
+        }
+    }
+
+    @Override
+    public FileInputStream downloadFileByStream(String relativePath) throws ServiceException
+    {
+        try
+        {
+            if (basePath.endsWith("/"))
+            {
+                basePath = basePath.substring(0, basePath.length() - 1);
+            }
+            if (!relativePath.startsWith(File.separator))
+            {
+                relativePath = File.separator + relativePath;
+            }
+            return new FileInputStream(basePath + relativePath);
         }
         catch (Exception e)
         {

@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,6 +129,11 @@ public class SQLHelper
 			{
 				MetaObject mo = (MetaObject) Reflections.getFieldValue(boundSql, "metaParameters");
 				Reflections.setFieldValue(countBS, "metaParameters", mo);
+			}
+			if (Reflections.getFieldValue(boundSql, "additionalParameters") != null)
+			{
+				HashMap mo = (HashMap) Reflections.getFieldValue(boundSql, "additionalParameters");
+				Reflections.setFieldValue(countBS, "additionalParameters", mo);
 			}
 			//解决MyBatis 分页foreach 参数失效 end 
 			SQLHelper.setParameters(ps, mappedStatement, countBS, parameterObject);

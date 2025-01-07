@@ -7,6 +7,7 @@ import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
 import com.neplus.framework.core.bean.PageResult;
 import com.neplus.framework.core.exception.ServiceException;
+import io.swagger.models.auth.In;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public interface TaskManagerService extends BaseService
 	 * @return
 	 * @throws ServiceException
 	 */
-	Boolean updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException;
+	Integer updateTaskStatus(Integer taskId, Integer toStatus, String comment, Integer fileId) throws ServiceException;
 
 	/**
 	 * Update the task's status to start
@@ -101,4 +102,44 @@ public interface TaskManagerService extends BaseService
 	 * @throws ServiceException
 	 */
 	Boolean updateTaskToInnerReject(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to draft send, and send the email simultaneously
+	 * @param taskId
+	 * @param mailContent
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToDraftSend(Integer taskId, String mailContent, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to client agreement.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToClientApproved(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to client rejection.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToClientReject(Integer taskId, String comment, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Update the task's status to declaration.
+	 * @param taskId
+	 * @param comment
+	 * @param fileId
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean updateTaskToDeclaration(Integer taskId, String comment, Integer fileId) throws ServiceException;
 }

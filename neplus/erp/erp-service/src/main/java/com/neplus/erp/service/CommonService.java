@@ -5,6 +5,8 @@ import com.neplus.erp.model.TmFilePO;
 import com.neplus.framework.core.exception.ServiceException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+
 
 /**
  *
@@ -32,12 +34,20 @@ public interface CommonService extends BaseService
     String fileUploadLocal(String relativePath, String filename, String base64File) throws ServiceException;
 
     /**
-     *  显示本地图片
+     *  Download the specific file by relative path.
      * @param relativePath  相对路径
      * @return
      * @throws ServiceException
      */
     byte[] downloadFile(String relativePath) throws ServiceException;
+
+    /**
+     * Download the specific file by relative path.
+     * @param relativePath
+     * @return
+     * @throws ServiceException
+     */
+    FileInputStream downloadFileByStream(String relativePath) throws ServiceException;
 
     /**
      *  Upload the file in the particular path then return the file information, including file path, file id

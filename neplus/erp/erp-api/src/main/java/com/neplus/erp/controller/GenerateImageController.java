@@ -58,12 +58,12 @@ public class GenerateImageController
 	}
 
 	@RequestMapping(value = "streamingDownload", method = RequestMethod.GET)
-	public StreamingResponseBody streamingDownload(HttpServletResponse response) throws IOException
+	public StreamingResponseBody streamingDownload(String filePath, String actualFileName, HttpServletResponse response) throws IOException
 	{
 
 		response.setContentType("application/octet-stream;charset=UTF-8");
-		response.setHeader("Content-Disposition", "attachment; filename=sample2.zip");
-		InputStream inputStream = new FileInputStream(new File("/Users/summer/Desktop/platform922_ccjk_win32.exe"));
+		response.setHeader("Content-Disposition", "attachment; filename=" + actualFileName);
+		InputStream inputStream = commonService.downloadFileByStream(filePath);
 		return outputStream -> {
 			int nRead;
 			byte[] data = new byte[1024];
