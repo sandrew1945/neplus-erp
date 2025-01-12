@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.neplus.erp.mapper.custom.MailManagerMapper" >
+	<resultMap id="BaseResultMap" type="com.neplus.erp.model.TtMailTemplatePO">
+		<id column="template_id" jdbcType="INTEGER" property="templateId" />
+		<result column="template_name" jdbcType="VARCHAR" property="templateName" />
+		<result column="template_status" jdbcType="INTEGER" property="templateStatus" />
+		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+		<result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+		<result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+	</resultMap>
+	
+	
+    <!--  分页查询List -->
+    <select id="mailManagerPageQuery" resultType="com.neplus.erp.bean.mailmanager.MailManagerBO" parameterType="pager">
+		SELECT * FROM tt_mail_template
+		WHERE 1 = 1
+		AND is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		<if test="condition.templateName != '' and condition.templateName != null">
+		AND template_name like CONCAT('%',#{condition.templateName},'%')
+		</if>
+		<if test="condition.templateStatus != null">
+		AND template_status = #{condition.templateStatus}
+		</if>
+		ORDER BY template_id
+	</select>
+
+</mapper>

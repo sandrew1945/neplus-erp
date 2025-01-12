@@ -2,16 +2,22 @@ package com.neplus.erp.controller;
 
 
 import com.neplus.framework.core.bean.AclUserBean;
+import com.neplus.framework.core.exception.BaseException;
+import com.neplus.framework.core.result.JsonResult;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.beans.PropertyEditorSupport;
 import java.text.SimpleDateFormat;
@@ -25,6 +31,7 @@ import static org.apache.ibatis.ognl.Ognl.setValue;
 
 
 @Slf4j
+@RestControllerAdvice
 public class BaseController
 {
     protected final static String LOGIN_USER = "loginUser";
@@ -32,6 +39,58 @@ public class BaseController
 
     @Resource
     protected HttpServletRequest request;
+
+    /**
+     *  处理数据绑定异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = ServletRequestBindingException.class)
+    public JsonResult errorBindingHandler(Exception ex) {
+        JsonResult result = new JsonResult();
+        result.requestFailure(ex.getMessage());
+        return result;
+    }
+
+    @ExceptionHandler(value = AuthorizationException.class)
+    public JsonResult noAuthorization(Exception ex) {
+        JsonResult result = new JsonResult();
+        result.requestFailure("您无权访问该资源，请联系系统管理员");
+        return result;
+    }
+
+    /**
+     *  处理请求动作异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = BaseException.class)
+    public JsonResult errorActionHandler(Exception ex) {
+        JsonResult result = new JsonResult();
+        while (null != ex)
+        {
+            Throwable throwable = ex.getCause();
+            if (null == throwable)
+            {
+                break;
+            }
+            ex = (Exception) throwable;
+        }
+        result.requestFailure(ex.getMessage());
+        return result;
+    }
+
+    /**
+     *  未知异常处理
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    public JsonResult unknowExceptionHandler(Exception ex) {
+        JsonResult result = new JsonResult();
+        result.requestFailure(ex.getMessage());
+        return result;
+    }
 
     @InitBinder
     protected void ininBinder(WebDataBinder binder)
