@@ -18,5 +18,5 @@ public class TmUserVO implements VO
     private String avatar;
     private String userType;
     private String userStatus;
-
+    private String emailToken;
 }

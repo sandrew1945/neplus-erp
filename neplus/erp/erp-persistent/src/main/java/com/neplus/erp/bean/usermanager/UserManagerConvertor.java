@@ -23,6 +23,7 @@ public interface UserManagerConvertor
     @Mapping(source = "userManagerBO.sex", target = "sex")
     @Mapping(source = "userManagerBO.userStatus", target = "userStatus")
     @Mapping(source = "userManagerBO.birthday", target = "birthday", dateFormat = "yyyy/MMM/dd")
+    @Mapping(source = "userManagerBO.emailToken", target = "emailToken")
     TmUserVO toUserVO(UserManagerBO userManagerBO);
 
     UserManagerBO toUserManagerBO(TmUserPO tmUserPO);

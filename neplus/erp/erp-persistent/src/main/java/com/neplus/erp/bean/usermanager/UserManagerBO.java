@@ -15,26 +15,16 @@ import java.util.Date;
 public class UserManagerBO implements BO
 {
     private Integer userId;
-
     private String userCode;
-
     private String userName;
-
     private String roleName;
-
     private String roleCode;
-
     private Date birthday;
-
     private String avatar;
-
     private Integer sex;
-
     private String phone;
-
     private String mobile;
-
     private String email;
-
     private Integer userStatus;
+    private String emailToken;
 }

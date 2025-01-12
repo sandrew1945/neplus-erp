@@ -117,7 +117,7 @@ public class MailManagerServiceImpl implements MailManagerService
             TtMailTemplatePOExample conditions = new TtMailTemplatePOExample();
             TtMailTemplatePOExample.Criteria criteria = conditions.createCriteria();
             criteria.andIsDeleteEqualTo(Fixcode.IF_TYPE_NO.fixcode);
-            List<TtMailTemplatePO> mailTemplateList = ttMailTemplatePOMapper.selectByExample(conditions);
+            List<TtMailTemplatePO> mailTemplateList = ttMailTemplatePOMapper.selectByExampleWithBLOBs(conditions);
             return mailManagerConvertor.toMailManagerBO(mailTemplateList);
         }
         catch (Exception e)

@@ -36,6 +36,7 @@
     <lombok.version>1.18.34</lombok.version>
     <shiro.version>2.0.1</shiro.version>
     <zkclient.version>0.2</zkclient.version>
+    <mail-sender-version>1.0-SNAPSHOT</mail-sender-version>
     <zookeeper.version>3.4.9</zookeeper.version>
     <maven-invoker-plugin.version>3.6.1</maven-invoker-plugin.version>
     <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
@@ -210,6 +211,11 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct-processor</artifactId>
         <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.nesc</groupId>
+        <artifactId>mailsender-starter</artifactId>
+        <version>${mail-sender-version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

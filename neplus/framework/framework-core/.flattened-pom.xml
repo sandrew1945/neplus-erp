@@ -163,6 +163,10 @@
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger-ui</artifactId>
     </dependency>
+    <dependency>
+      <groupId>cn.nesc</groupId>
+      <artifactId>mailsender-starter</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <finalName>framework-core</finalName>

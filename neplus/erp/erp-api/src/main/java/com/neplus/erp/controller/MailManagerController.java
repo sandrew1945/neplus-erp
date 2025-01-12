@@ -166,7 +166,7 @@ public class MailManagerController extends BaseController
         try
         {
             List<MailVO> mailVOList = mailManagerConvertor.toMailVO(mailManagerService.getAllMailTemplate());
-            result.requestSuccess(mailVOList);
+            return result.requestSuccess(mailVOList);
         }
         catch (Exception e)
         {

@@ -16,26 +16,16 @@ import java.util.Date;
 public class UserManagerDTO implements DTO
 {
     private Integer userId;
-
     private String userCode;
-
     private String userName;
-
     private String password;
-
     private Integer sex;
-
     private String phone;
-
     private String mobile;
-
     private String email;
-
     private LocalDate birthday;
-
     private String avatar;
-
     private Integer userType;
-
     private Integer userStatus;
+    private String emailToken;
 }

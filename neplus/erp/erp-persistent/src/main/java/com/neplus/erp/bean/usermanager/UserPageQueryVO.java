@@ -17,24 +17,15 @@ import java.util.Date;
 public class UserPageQueryVO implements VO
 {
     private Integer userId;
-
     private String userCode;
-
     private String userName;
-
     private String roleName;
-
     private String roleCode;
-
     private String sex;
-
     private String phone;
-
     private String mobile;
-
     private String email;
-
     private Date birthday;
-
     private String userStatus;
+    private String emailToken;
 }
