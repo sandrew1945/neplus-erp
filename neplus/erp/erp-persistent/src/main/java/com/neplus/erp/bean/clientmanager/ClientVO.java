@@ -2,7 +2,7 @@ package com.neplus.erp.bean.clientmanager;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class ClientVO
@@ -17,13 +17,15 @@ public class ClientVO
     private String approveName;
     private String clientIct;
     private String clientVat;
-    private Date serviceStart;
-    private Date serviceEnd;
+    private LocalDate serviceStart;
+    private LocalDate serviceEnd;
     private String clientTaxNo;
     private String clientKbk;
     private String clientMobile;
-    private String clientTel;
+    private String clientLinkman;
     private String clientEmail;
     private String clientAddress;
+    private String clientPostcode;
+    private String clientCity;
     private String description;
 }

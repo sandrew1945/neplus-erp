@@ -1,13 +1,10 @@
 package com.neplus.erp.bean.clientmanager;
 
-import com.neplus.erp.bean.usermanager.UserManagerBO;
-import com.neplus.erp.bean.usermanager.UserManagerDTO;
-import com.neplus.erp.bean.usermanager.UserPageQueryVO;
+
 import com.neplus.erp.model.TmClientPO;
-import com.neplus.erp.model.TmUserPO;
-import com.neplus.erp.model.TmUserVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 
 import java.util.List;
 
@@ -22,10 +19,17 @@ public interface ClientManagerConvertor
 {
     ClientVO toClientVO(ClientManagerBO clientManagerBO);
 
+    @Mapping(source = "clientManagerBO.serviceStart", target = "serviceStart")
+    @Mapping(source = "clientManagerBO.serviceEnd", target = "serviceEnd")
     TmClientPO toClientPO(ClientManagerBO clientManagerBO);
 
+    @Mapping(source = "clientManagerDTO.serviceStart", target = "serviceStart")
+    @Mapping(source = "clientManagerDTO.serviceEnd", target = "serviceEnd")
     TmClientPO toClientPO(ClientManagerDTO clientManagerDTO);
 
+    @Mapping(source = "tmClientPO.serviceStart", target = "serviceStart")
+    @Mapping(source = "tmClientPO.serviceEnd", target = "serviceEnd")
+    @Mapping(source = "tmClientPO.clientLinkman", target = "clientLinkman")
     ClientManagerBO toClientManagerBO(TmClientPO tmClientPO);
 
     List<ClientVO> toClientVO(List<ClientManagerBO> clientManagerBOList);

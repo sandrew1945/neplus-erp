@@ -16,8 +16,11 @@
 		<result column="client_kbk" jdbcType="VARCHAR" property="clientKbk" />
 		<result column="client_fee" jdbcType="VARCHAR" property="clientFee" />
 		<result column="client_mobile" jdbcType="VARCHAR" property="clientMobile" />
-		<result column="client_tel" jdbcType="VARCHAR" property="clientTel" />
+		<result column="client_linkman" jdbcType="VARCHAR" property="clientLinkman" />
+		<result column="client_email" jdbcType="VARCHAR" property="clientEmail" />
 		<result column="client_address" jdbcType="VARCHAR" property="clientAddress" />
+		<result column="client_postcode" jdbcType="VARCHAR" property="clientPostcode" />
+		<result column="client_city" jdbcType="VARCHAR" property="clientCity" />
 		<result column="description" jdbcType="VARCHAR" property="description" />
 		<result column="is_delete" jdbcType="INTEGER" property="isDelete" />
 		<result column="create_date" jdbcType="TIMESTAMP" property="createDate" />

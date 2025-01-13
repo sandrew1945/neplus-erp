@@ -87,6 +87,7 @@ public class BaseController
      */
     @ExceptionHandler(value = Exception.class)
     public JsonResult unknowExceptionHandler(Exception ex) {
+        log.error(ex.getMessage(), ex);
         JsonResult result = new JsonResult();
         result.requestFailure(ex.getMessage());
         return result;

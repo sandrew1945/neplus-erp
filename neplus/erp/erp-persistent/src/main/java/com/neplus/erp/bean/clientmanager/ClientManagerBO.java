@@ -3,7 +3,7 @@ package com.neplus.erp.bean.clientmanager;
 import com.neplus.framework.core.bean.BO;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @ClassName UserManagerBO
@@ -24,13 +24,15 @@ public class ClientManagerBO implements BO
     private String optName;
     private Integer approveId;
     private String approveName;
-    private Date serviceStart;
-    private Date serviceEnd;
+    private LocalDate serviceStart;
+    private LocalDate serviceEnd;
     private String clientTaxNo;
     private String clientKbk;
     private String clientMobile;
-    private String clientTel;
+    private String clientLinkman;
     private String clientEmail;
     private String clientAddress;
+    private String clientPostcode;
+    private String clientCity;
     private String description;
 }
