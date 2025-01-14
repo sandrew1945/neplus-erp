@@ -58,9 +58,10 @@ public class ClientManagerController extends BaseController
 	private ClientManagerConvertor clientManagerConvertor;
 
 	@PostMapping(value = "/clientManagerPageQuery")
-	public JsonResult<PageResult<ClientManagerBO>> clientManagerPageQuery(@RequestParam(required = false) String clientName, @RequestParam(required = false) Integer clientType,
-														 @RequestParam(required = false) Integer optId, @RequestParam(required = false) Integer declarePeriod,
-														 @RequestParam(required = false) Integer approveId, int limit, int curPage) throws JsonException
+	public JsonResult<PageResult<ClientManagerBO>> clientManagerPageQuery(
+			@RequestParam(required = false) String clientName, @RequestParam(required = false) Integer clientType,
+			@RequestParam(required = false) Integer optId, @RequestParam(required = false) Integer approveId,
+			int limit, int curPage) throws JsonException
 	{
 		JsonResult<PageResult<ClientManagerBO>> result = new JsonResult<>();
 		try
@@ -69,7 +70,7 @@ public class ClientManagerController extends BaseController
 			condition.setClientName(clientName);
 			condition.setClientType(clientType);
 			condition.setOptId(optId);
-			condition.setDeclarePeriod(declarePeriod);
+//			condition.setDeclarePeriod(declarePeriod);
 			condition.setApproveId(approveId);
 			PageResult<ClientManagerBO> pr = clientManagerService.clientManagerPageQuery(condition, getLoginUser().getRoleType(), limit, curPage);
 			return result.requestSuccess(pr.convert(ClientVO.class));

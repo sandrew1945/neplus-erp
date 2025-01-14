@@ -48,9 +48,9 @@
 		<if test="condition.approveId != '' and condition.approveId != null">
 			AND c.approve_id = #{condition.approveId}
 		</if>
-		<if test="condition.declarePeriod != '' and condition.declarePeriod != null">
-		AND c.declare_period = #{condition.declarePeriod}
-		</if>
+<!--		<if test="condition.declarePeriod != '' and condition.declarePeriod != null">-->
+<!--		AND c.declare_period = #{condition.declarePeriod}-->
+<!--		</if>-->
 		AND c.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
 		ORDER BY client_id
 	</select>

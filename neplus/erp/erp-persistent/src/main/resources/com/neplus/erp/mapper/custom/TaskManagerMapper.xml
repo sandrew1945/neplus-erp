@@ -68,7 +68,7 @@
 	</select>
 
     <select id="getTaskInfoById" resultType="com.neplus.erp.bean.taskmanager.TaskManagerBO" parameterType="integer">
-		SELECT t.task_id, t.client_id, t.task_name, c.client_name, c.client_type, c.client_email, c.client_mobile, c.client_tel, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,t.create_date
+		SELECT t.task_id, t.client_id, t.task_name, c.client_name, c.client_type, c.client_email, c.client_mobile, ou.user_name as opt_name, au.user_name AS approve_name, t.task_type, t.task_status,t.create_date
 		FROM tt_task t
 		 LEFT JOIN tm_client c ON t.client_id = c.client_id
 		 LEFT JOIN tm_user ou ON c.opt_id = ou.user_id

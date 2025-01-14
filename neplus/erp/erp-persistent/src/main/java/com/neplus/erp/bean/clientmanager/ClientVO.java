@@ -10,7 +10,7 @@ public class ClientVO
     private Integer clientId;
     private String clientName;
     private Integer clientType;
-    private Integer declarePeriod;
+//    private Integer declarePeriod;
     private Integer optId;
     private String optName;
     private Integer approveId;

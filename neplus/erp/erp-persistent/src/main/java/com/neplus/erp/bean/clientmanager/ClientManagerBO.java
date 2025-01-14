@@ -17,7 +17,7 @@ public class ClientManagerBO implements BO
     private Integer clientId;
     private String clientName;
     private Integer clientType;
-    private Integer declarePeriod;
+//    private Integer declarePeriod;
     private String clientIct;
     private String clientVat;
     private Integer optId;

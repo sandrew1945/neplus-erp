@@ -19,6 +19,8 @@ public interface ClientManagerConvertor
 {
     ClientVO toClientVO(ClientManagerBO clientManagerBO);
 
+
+
     @Mapping(source = "clientManagerBO.serviceStart", target = "serviceStart")
     @Mapping(source = "clientManagerBO.serviceEnd", target = "serviceEnd")
     TmClientPO toClientPO(ClientManagerBO clientManagerBO);
@@ -30,6 +32,7 @@ public interface ClientManagerConvertor
     @Mapping(source = "tmClientPO.serviceStart", target = "serviceStart")
     @Mapping(source = "tmClientPO.serviceEnd", target = "serviceEnd")
     @Mapping(source = "tmClientPO.clientLinkman", target = "clientLinkman")
+    @Mapping(target = "tmClientPO.declarePeriod", ignore = true)
     ClientManagerBO toClientManagerBO(TmClientPO tmClientPO);
 
     List<ClientVO> toClientVO(List<ClientManagerBO> clientManagerBOList);
