@@ -261,7 +261,7 @@ public class TaskManagerController extends BaseController
 	}
 
 	@PostMapping(value = "makeTaskDraftSent")
-	public JsonResult<Boolean> makeTaskDraftSent(Integer taskId, @RequestParam(required = false) String emailContent, @RequestParam(required = false) Integer fileId) throws JsonException
+	public JsonResult<Boolean> makeTaskDraftSent(Integer taskId, @RequestParam(required = true) String emailSubject, @RequestParam(required = true) String emailContent, @RequestParam(required = true) Integer fileId) throws JsonException
 	{
 		JsonResult<Boolean> result = new JsonResult<>();
 		try
@@ -269,7 +269,7 @@ public class TaskManagerController extends BaseController
 			log.debug("taskId ======>" + taskId);
 			log.debug("emailContent ======>" + emailContent);
 			log.debug("fileId ======>" + fileId);
-			return result.requestSuccess(taskManagerService.updateTaskToDraftSend(taskId, emailContent, fileId));
+			return result.requestSuccess(taskManagerService.updateTaskToDraftSend(taskId, emailSubject, emailContent, fileId));
 		}
 		catch (Exception e)
 		{
@@ -325,12 +325,12 @@ public class TaskManagerController extends BaseController
 	}
 
 	@PostMapping(value = "makeTaskDeclaration")
-	public JsonResult<Boolean> makeTaskDeclaration(Integer taskId, @RequestParam(required = false) String comment, @RequestParam(required = false) Integer fileId) throws JsonException
+	public JsonResult<Boolean> makeTaskDeclaration(Integer taskId, @RequestParam(required = true) String emailSubject, @RequestParam(required = true) String emailContent, @RequestParam(required = true) Integer fileId) throws JsonException
 	{
 		JsonResult<Boolean> result = new JsonResult<>();
 		try
 		{
-			return result.requestSuccess(taskManagerService.updateTaskToDeclaration(taskId, comment, fileId));
+			return result.requestSuccess(taskManagerService.updateTaskToDeclaration(taskId, emailSubject, emailContent, fileId));
 		}
 		catch (Exception e)
 		{

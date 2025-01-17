@@ -86,4 +86,16 @@
 		  AND tp.task_id = #{_parameter}
 		ORDER BY tp.create_date, tp.process_id ASC
 	</select>
+	
+	<select id="getNoTaskClientByDate" resultType="com.neplus.erp.model.TmClientPO" parameterType="string">
+		SELECT c.* FROM tm_client c LEFT JOIN (
+			SELECT * FROM tt_task WHERE DATE_FORMAT(create_date, '%m-%Y')  = #{_parameter}
+		) t on c.client_id = t.client_id
+		WHERE c.is_delete = ${@com.neplus.erp.dictionary.Fixcode@IF_TYPE_NO.getCode()}
+		  AND t.client_id is null
+	</select>
+
+	<select id="getTaskByYearAndQuarter" resultType="com.neplus.erp.model.TtTaskPO">
+		SELECT * FROM tt_task WHERE client_id = #{clientId} AND QUARTER(create_date) = #{quarter} AND YEAR(create_date) = #{year}
+	</select>
 </mapper>

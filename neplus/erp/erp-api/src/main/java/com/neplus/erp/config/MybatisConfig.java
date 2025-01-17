@@ -58,7 +58,7 @@ public class MybatisConfig
         readOnlyTx.setPropagationBehavior(TransactionDefinition.PROPAGATION_NOT_SUPPORTED);
         /*当前存在事务就使用当前事务，当前不存在事务就创建一个新的事务*/
         RuleBasedTransactionAttribute requiredTx = new RuleBasedTransactionAttribute(TransactionDefinition.PROPAGATION_REQUIRED, Collections.singletonList(new RollbackRuleAttribute(ServiceException.class)));
-        requiredTx.setTimeout(5);
+        requiredTx.setTimeout(15);
         Map<String, TransactionAttribute> txMap = new HashMap<String, TransactionAttribute>();
         txMap.put("add*", requiredTx);
         txMap.put("save*", requiredTx);

@@ -6,6 +6,7 @@ import com.neplus.erp.model.TmTaskPO;
 import com.neplus.erp.model.TtMailTemplatePO;
 import com.neplus.erp.model.TtTaskPO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -18,12 +19,16 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MailManagerConvertor
 {
+    @Mapping(source = "mailManagerBO.templateSubject", target = "templateSubject")
     MailVO toMailVO(MailManagerBO mailManagerBO);
 
+    @Mapping(source = "mailManagerBO.templateSubject", target = "templateSubject")
     TtMailTemplatePO toMailPO(MailManagerBO mailManagerBO);
 
+    @Mapping(source = "mailManagerDTO.templateSubject", target = "templateSubject")
     TtMailTemplatePO toMailPO(MailManagerDTO mailManagerDTO);
 
+    @Mapping(source = "ttMailTemplatePO.templateSubject", target = "templateSubject")
     MailManagerBO toMailManagerBO(TtMailTemplatePO ttMailTemplatePO);
 
     List<MailVO> toMailVO(List<MailManagerBO> mailManagerBOList);

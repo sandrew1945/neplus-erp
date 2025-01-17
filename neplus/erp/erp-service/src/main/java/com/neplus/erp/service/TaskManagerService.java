@@ -5,6 +5,7 @@ import com.neplus.erp.bean.clientmanager.ClientManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskManagerBO;
 import com.neplus.erp.bean.taskmanager.TaskManagerDTO;
 import com.neplus.erp.bean.taskmanager.TaskProcessBO;
+import com.neplus.erp.model.TmClientPO;
 import com.neplus.framework.core.bean.PageResult;
 import com.neplus.framework.core.exception.ServiceException;
 import io.swagger.models.auth.In;
@@ -111,7 +112,7 @@ public interface TaskManagerService extends BaseService
 	 * @return
 	 * @throws ServiceException
 	 */
-	Boolean updateTaskToDraftSend(Integer taskId, String mailContent, Integer fileId) throws ServiceException;
+	Boolean updateTaskToDraftSend(Integer taskId, String subject, String mailContent, Integer fileId) throws ServiceException;
 
 	/**
 	 *  Update the task's status to client agreement.
@@ -136,10 +137,28 @@ public interface TaskManagerService extends BaseService
 	/**
 	 *  Update the task's status to declaration.
 	 * @param taskId
-	 * @param comment
+	 * @param emailContent
 	 * @param fileId
 	 * @return
 	 * @throws ServiceException
 	 */
-	Boolean updateTaskToDeclaration(Integer taskId, String comment, Integer fileId) throws ServiceException;
+	Boolean updateTaskToDeclaration(Integer taskId, String subject, String emailContent, Integer fileId) throws ServiceException;
+
+	/**
+	 *  Fetch all client which didn't create task by date.
+	 * @param date [mm-yyyy]
+	 * @return
+	 * @throws ServiceException
+	 */
+	List<TmClientPO> getNoTaskClientByDate(String date) throws ServiceException;
+
+	/**
+	 *  Create task for specific clients by conditions.
+	 * @param clients
+	 * @param yearAndMonth
+	 * @param quarterOfYear
+	 * @return
+	 * @throws ServiceException
+	 */
+	Boolean createTaskByDetermination(List<TmClientPO> clients, String yearAndMonth, String quarterOfYear) throws ServiceException;
 }

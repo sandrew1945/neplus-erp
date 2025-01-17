@@ -191,7 +191,7 @@
         </dependency>
         <dependency>
             <groupId>cn.nesc</groupId>
-            <artifactId>mailsender-starter</artifactId>
+            <artifactId>mailsender-core</artifactId>
         </dependency>
     </dependencies>
 
