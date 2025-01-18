@@ -460,9 +460,13 @@ public class TaskManagerServiceImpl implements TaskManagerService
             {
                 return Fixcode.DEC_TYPE_N;
             }
+            else if (Fixcode.DEC_TYPE_Q.fixcode.toString().equals(clientICT) || Fixcode.DEC_TYPE_Q.fixcode.toString().equals(clientVAT))
+            {
+                return Fixcode.DEC_TYPE_Q;
+            }
             else
             {
-                throw new ServiceException("Client's ICT or VAT format is incorrect, The client's ICT is:" + client.getClientIct() + " and client's VAT is" + client.getClientVat());
+                throw new ServiceException("Client's ICT or VAT format is incorrect, The client's ICT is:" + client.getClientIct() + " and client's VAT is:" + client.getClientVat());
             }
         }
         catch (Exception e)
